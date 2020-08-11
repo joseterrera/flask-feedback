@@ -1,3 +1,3 @@
-DROP DATABASE IF EXISTS feedback_exercise;
+DROP DATABASE IF EXISTS flask-feedback;
 
-CREATE DATABASE feedback_exercise;
+CREATE DATABASE flask-feedback;

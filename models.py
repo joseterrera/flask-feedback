@@ -21,38 +21,38 @@ class User(db.Model):
 
   username = db.Column(
     db.String(20), nullable=False, unique=True, primary_key=True)
-    password = db.Column(db.Text, nullable=False)
-    email = db.Column(db.String(50), nullable=False)
-    first_name = db.Column(db.String(30), nullable=False) 
-    last_name = db.Column(db.String(30), nullable=False)
-    feedback = db.relationship('Feedback', backref="user", cascade="all, delete")
+  password = db.Column(db.Text, nullable=False)
+  email = db.Column(db.String(50), nullable=False)
+  first_name = db.Column(db.String(30), nullable=False) 
+  last_name = db.Column(db.String(30), nullable=False)
+  feedback = db.relationship('Feedback', backref="user", cascade="all, delete")
+
+  @classmethod
+  def register(cls, username, password, first_name, last_name, email):
+    """Register a user, hashing their password"""
+    hashed = bcrypt.generate_password_hash(password)
+    hashed_udf8 = hashed.decode('utf8')
+    user = cls(
+      username=username,
+      password=password,
+      first_name=first_name,
+      last_name=last_name,
+      email=email
+    )
+
+    db.session.add(user)
+    return user
 
     @classmethod
-    def register(cls, username, password, first_name, last_name, email):
-      """Register a user, hashing their password"""
-      hashed = bcrypt.generate_password_hash(password)
-      hashed_udf8 = hashed.decode('utf8')
-      user = cls(
-        username=username,
-        password=password,
-        first_name=first_name,
-        last_name=last_name,
-        email=email
-      )
+    def authenticate(cls, username, password):
+      """Validate that user exists and paswword is correct.
+      Return user if valid, else return False. """
 
-      db.session.add(user)
-      return user
-
-      @classmethod
-      def authenticate(cls, username, password):
-        """Validate that user exists and paswword is correct.
-        Return user if valid, else return False. """
-
-        user = User.query.filter_by(username=username).first()
-        if user and bcrypt.check_password_hash(user.password, password):
-          return user
-        else:
-          return False
+      user = User.query.filter_by(username=username).first()
+      if user and bcrypt.check_password_hash(user.password, password):
+        return user
+      else:
+        return False
 
 class Feedback(db.Model):
   """Feedback"""

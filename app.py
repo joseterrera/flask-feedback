@@ -130,7 +130,7 @@ def new_feedback(username):
   else:
     return render_template('feedback/new.html', form=form)
 
-@app.route("feedback/<int:feedback_id>/update", methods=["GET", "POST"])
+@app.route("/feedback/<int:feedback_id>/update", methods=["GET", "POST"])
 def update_feedback(feedback_id):
   """Show update feedback form and enable submission"""
   feedback = Feedback.query.get(feedback_id)
